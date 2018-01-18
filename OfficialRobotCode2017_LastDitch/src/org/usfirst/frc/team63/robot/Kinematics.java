@@ -6,16 +6,25 @@ import org.usfirst.frc.team63.robot.util.RigidTransform2d;
 public class Kinematics {
 	
     public static RigidTransform2d.Delta forwardKinematics(double left_front_velocity, double left_rear_velocity,
-												           double right_front_velocity, double right_rear_velocity,
-												           double delta_radians) {
-		double dx = (left_front_velocity + right_front_velocity + left_rear_velocity + right_rear_velocity) / 4;
-		double dy = (-left_front_velocity + right_front_velocity + left_rear_velocity - right_rear_velocity) / 4;
-		double dtheta = (-left_front_velocity + right_front_velocity - left_rear_velocity + right_rear_velocity) /
-		(4 * (RobotMap.kWheelSeparationWidth + RobotMap.kWheelSeparationLength));
-		
-		dtheta = delta_radians;
+												           double right_front_velocity, double right_rear_velocity) {
+    	double left = left_front_velocity + left_rear_velocity;
+    	double right = right_front_velocity + right_rear_velocity;
+		double dx = (right + left)/2;
+		double dy = 0;
+		double dtheta = (right - left)/RobotMap.kWheelSeparationWidth;
 		return new RigidTransform2d.Delta(dx, dy, dtheta);
     }
+     
+    public static RigidTransform2d.Delta forwardKinematics(double left_front_velocity, double left_rear_velocity,
+	           double right_front_velocity, double right_rear_velocity,
+	           double delta_radians) {
+    	double left = left_front_velocity + left_rear_velocity;
+    	double right = right_front_velocity + right_rear_velocity;
+    	double dx = (left+right)/2;
+    	double dy = 0;
+    	double dtheta = delta_radians;
+    	return new RigidTransform2d.Delta(dx, dy, dtheta);
+}
    
     /**
      * Inverse kinematics to obtain the individual wheel velocities needed to achieve a desired robot motion
@@ -35,14 +44,10 @@ public class Kinematics {
 //    	
 //    	return new DriveVelocity(left_front, left_rear, right_front, right_rear);
     	
-    	double left_front = (velocity.dx - velocity.dy - velocity.dtheta);
+    	double left = velocity.dx*2 - velocity.dtheta*RobotMap.kWheelSeparationWidth;
 
-		double right_front = (velocity.dx + velocity.dy + velocity.dtheta);
-		
-		double left_rear = (velocity.dx + velocity.dy - velocity.dtheta);
-		
-		double right_rear = (velocity.dx - velocity.dy + velocity.dtheta);
+		double right = velocity.dx*2 + velocity.dtheta*RobotMap.kWheelSeparationWidth;
     	
-    	return new DriveVelocity(left_front, left_rear, right_front, right_rear);
+    	return new DriveVelocity(left, left, right, right);
     }
 }

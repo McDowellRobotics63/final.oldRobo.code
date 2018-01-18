@@ -180,10 +180,10 @@ public class FieldOrientedDriveHelper {
       yIn = rotated[1];
 
       double[] wheelSpeeds = new double[kMaxNumberOfMotors];
-      wheelSpeeds[MotorType.kFrontLeft.value] = xIn + yIn + rotation;
-      wheelSpeeds[MotorType.kFrontRight.value] = -xIn + yIn - rotation;
-      wheelSpeeds[MotorType.kRearLeft.value] = -xIn + yIn + rotation;
-      wheelSpeeds[MotorType.kRearRight.value] = xIn + yIn - rotation;
+      wheelSpeeds[MotorType.kFrontLeft.value] =yIn + rotation;
+      wheelSpeeds[MotorType.kFrontRight.value] = yIn - rotation;
+      wheelSpeeds[MotorType.kRearLeft.value] = yIn + rotation;
+      wheelSpeeds[MotorType.kRearRight.value] = yIn - rotation;
 
       normalize(wheelSpeeds);
      
